@@ -1,0 +1,681 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:1.5rem 0;max-width:680px}
+h1{font-size:22px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.sub{font-size:14px;color:var(--color-text-secondary);margin-bottom:1.5rem}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:1.5rem}
+.stat{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:12px;text-align:center}
+.stat-n{font-size:22px;font-weight:500;color:var(--color-text-primary)}
+.stat-l{font-size:12px;color:var(--color-text-secondary);margin-top:2px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.25rem}
+.tab{padding:6px 12px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);font-size:13px;cursor:pointer;background:var(--color-background-primary);color:var(--color-text-secondary)}
+.tab.on{border-color:var(--color-border-primary);color:var(--color-text-primary);font-weight:500}
+.btns{display:flex;gap:8px;margin-bottom:1.5rem;flex-wrap:wrap}
+button{padding:8px 16px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);cursor:pointer;font-size:14px;background:var(--color-background-primary);color:var(--color-text-primary)}
+button:hover{background:var(--color-background-secondary)}
+.btn-p{border-color:var(--color-border-primary);font-weight:500}
+.section-lbl{font-size:11px;font-weight:500;letter-spacing:.05em;color:var(--color-text-tertiary);text-transform:uppercase;margin:1.5rem 0 .75rem}
+.qcard{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;margin-bottom:1rem}
+.qhead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}
+.qtext{font-size:15px;color:var(--color-text-primary);line-height:1.55;flex:1}
+.qnum{font-size:12px;color:var(--color-text-tertiary);white-space:nowrap;margin-top:2px}
+.opts{display:flex;flex-direction:column;gap:6px}
+.opt{display:flex;align-items:flex-start;gap:10px;padding:8px 12px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);cursor:pointer;font-size:14px;color:var(--color-text-primary);background:var(--color-background-primary);line-height:1.5;transition:border-color .1s,background .1s}
+.opt:hover:not(.locked){border-color:var(--color-border-secondary);background:var(--color-background-secondary)}
+.opt.correct{border-color:#1D9E75;background:#E1F5EE;color:#085041}
+.opt.wrong{border-color:#E24B4A;background:#FCEBEB;color:#501313}
+.opt.show-correct{border-color:#1D9E75;background:#E1F5EE;color:#085041}
+.opt-letter{font-weight:500;min-width:18px}
+.exp{margin-top:10px;padding:10px 12px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);font-size:13px;color:var(--color-text-secondary);line-height:1.5;border-left:2px solid var(--color-border-secondary);border-radius:0}
+.prog-wrap{margin-bottom:1.5rem;display:none}
+.prog-txt{font-size:15px;font-weight:500;margin-bottom:6px;color:var(--color-text-primary)}
+.prog-bg{height:8px;background:var(--color-background-secondary);border-radius:99px;overflow:hidden}
+.prog-fill{height:100%;background:#1D9E75;border-radius:99px;transition:width .4s ease}
+
+/* =========================================
+   CLEAN MODERN QUIZ UI
+   ========================================= */
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+:root{
+  --primary:#2563eb;
+  --success:#16a34a;
+  --danger:#dc2626;
+
+  --bg:#f3f4f6;
+  --card:#ffffff;
+
+  --text:#111827;
+  --text-light:#6b7280;
+
+  --border:#e5e7eb;
+
+  --radius-sm:10px;
+  --radius-md:16px;
+  --radius-lg:22px;
+}
+
+/* =========================================
+   BODY
+   ========================================= */
+
+body{
+  font-family:Arial, sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  padding:30px 15px;
+  display:flex;
+  justify-content:center;
+}
+
+/* =========================================
+   MAIN CONTAINER
+   ========================================= */
+
+.wrap{
+  width:100%;
+  max-width:950px;
+  background:var(--card);
+  padding:30px;
+  border-radius:var(--radius-lg);
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.08),
+    0 2px 8px rgba(0,0,0,0.04);
+  border:1px solid var(--border);
+}
+
+/* =========================================
+   HEADINGS
+   ========================================= */
+
+h1{
+  font-size:32px;
+  margin-bottom:8px;
+  font-weight:700;
+}
+
+.sub{
+  font-size:15px;
+  color:var(--text-light);
+  margin-bottom:28px;
+  line-height:1.6;
+}
+
+/* =========================================
+   STATS
+   ========================================= */
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+  margin-bottom:25px;
+}
+
+.stat{
+  background:#f9fafb;
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  padding:18px;
+  text-align:center;
+}
+
+.stat-n{
+  font-size:28px;
+  font-weight:700;
+}
+
+.stat-l{
+  margin-top:5px;
+  font-size:13px;
+  color:var(--text-light);
+}
+
+/* =========================================
+   PROGRESS BAR
+   ========================================= */
+
+.prog-wrap{
+  margin-bottom:25px;
+  display:none;
+}
+
+.prog-txt{
+  font-size:15px;
+  font-weight:600;
+  margin-bottom:8px;
+}
+
+.prog-bg{
+  height:12px;
+  background:#e5e7eb;
+  border-radius:999px;
+  overflow:hidden;
+}
+
+.prog-fill{
+  height:100%;
+  background:var(--success);
+  border-radius:999px;
+  transition:width .4s ease;
+}
+
+/* =========================================
+   TABS
+   ========================================= */
+
+.tabs{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:20px;
+}
+
+.tab{
+  border:none;
+  padding:10px 18px;
+  border-radius:999px;
+  background:#f3f4f6;
+  color:var(--text);
+  cursor:pointer;
+  font-size:14px;
+  transition:0.2s ease;
+  border:1px solid transparent;
+}
+
+.tab:hover{
+  background:#e5e7eb;
+}
+
+.tab.on{
+  background:var(--primary);
+  color:white;
+  font-weight:600;
+}
+
+/* =========================================
+   BUTTONS
+   ========================================= */
+
+.btns{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:30px;
+}
+
+button{
+  padding:12px 18px;
+  border:none;
+  border-radius:var(--radius-sm);
+  cursor:pointer;
+  font-size:14px;
+  font-weight:600;
+  transition:0.2s ease;
+}
+
+button:hover{
+  transform:translateY(-1px);
+}
+
+.btn-p{
+  background:var(--primary);
+  color:white;
+}
+
+.btn-p:hover{
+  opacity:0.9;
+}
+
+button:not(.btn-p){
+  background:#f3f4f6;
+  color:var(--text);
+  border:1px solid var(--border);
+}
+
+/* =========================================
+   SECTION LABEL
+   ========================================= */
+
+.section-lbl{
+  margin:35px 0 15px;
+  font-size:13px;
+  font-weight:700;
+  color:var(--text-light);
+  text-transform:uppercase;
+  letter-spacing:1px;
+}
+
+/* =========================================
+   QUESTION CARD
+   ========================================= */
+
+.qcard{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  padding:22px;
+  margin-bottom:20px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.04);
+  transition:0.2s ease;
+}
+
+.qcard:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 20px rgba(0,0,0,0.07);
+}
+
+/* =========================================
+   QUESTION HEADER
+   ========================================= */
+
+.qhead{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  margin-bottom:18px;
+}
+
+.qtext{
+  font-size:17px;
+  line-height:1.7;
+  font-weight:600;
+  flex:1;
+}
+
+.qnum{
+  font-size:13px;
+  color:var(--text-light);
+  white-space:nowrap;
+}
+
+/* =========================================
+   OPTIONS
+   ========================================= */
+
+.opts{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.opt{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+
+  padding:14px 16px;
+  border-radius:14px;
+
+  border:1px solid var(--border);
+
+  cursor:pointer;
+
+  transition:0.2s ease;
+
+  background:white;
+
+  line-height:1.6;
+}
+
+.opt:hover:not(.locked){
+  background:#f9fafb;
+  border-color:var(--primary);
+}
+
+.opt-letter{
+  font-weight:700;
+  min-width:22px;
+}
+
+/* =========================================
+   ANSWER STATES
+   ========================================= */
+
+.opt.correct{
+  background:#dcfce7;
+  border-color:#22c55e;
+  color:#14532d;
+}
+
+.opt.wrong{
+  background:#fee2e2;
+  border-color:#ef4444;
+  color:#7f1d1d;
+}
+
+.opt.locked{
+  cursor:default;
+}
+
+/* =========================================
+   EXPLANATION
+   ========================================= */
+
+.exp{
+  margin-top:16px;
+  padding:14px 16px;
+  background:#f9fafb;
+  border-left:4px solid var(--primary);
+  border-radius:12px;
+  font-size:14px;
+  color:var(--text-light);
+  line-height:1.7;
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+@media(max-width:768px){
+
+  body{
+    padding:15px;
+  }
+
+  .wrap{
+    padding:18px;
+    border-radius:18px;
+  }
+
+  h1{
+    font-size:24px;
+  }
+
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .qhead{
+    flex-direction:column;
+  }
+
+  .qnum{
+    align-self:flex-end;
+  }
+
+  .qtext{
+    font-size:15px;
+  }
+
+  button{
+    width:100%;
+  }
+
+  .btns{
+    flex-direction:column;
+  }
+
+}
+</style>
+
+<div class="wrap">
+  <h1>Gender and Society — Final exam practice</h1>
+  <p class="sub">Answers are shuffled. Pick a topic or do all. Click an option to answer.</p>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-n" id="sTotal">0</div><div class="stat-l">Answered</div></div>
+    <div class="stat"><div class="stat-n" id="sCorrect" style="color:#1D9E75">0</div><div class="stat-l">Correct</div></div>
+    <div class="stat"><div class="stat-n" id="sWrong" style="color:#E24B4A">0</div><div class="stat-l">Wrong</div></div>
+    <div class="stat"><div class="stat-n" id="sPct">—</div><div class="stat-l">Score</div></div>
+  </div>
+
+  <div class="prog-wrap" id="progWrap">
+    <div class="prog-txt" id="progTxt"></div>
+    <div class="prog-bg"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+  <div class="btns">
+    <button class="btn-p" onclick="resetAll()">Reset all answers</button>
+    <button onclick="revealAll()">Reveal all answers</button>
+  </div>
+  <div id="qlist"></div>
+</div>
+
+<script>
+const RAW = [
+  {topic:"GBV & Consent",q:"Under Philippine law and international standards, which correctly describes 'consent'?",opts:["Consent is implied when a person does not physically resist","Consent given under intoxication is valid if both parties agreed earlier","Consent must be clear, voluntary, and can be withdrawn at any time","Silence in a relationship counts as ongoing consent"],ans:2,exp:"Consent must be freely and actively given every time. Silence, intoxication, fear, or prior agreement do NOT constitute valid consent."},
+  {topic:"GBV & Consent",q:"Which statement about Gender-Based Violence (GBV) is MOST accurate?",opts:["GBV only refers to physical violence between intimate partners","Only women can be survivors of GBV","GBV is exclusively a private, domestic issue","GBV can be physical, emotional, sexual, economic, or psychological"],ans:3,exp:"GBV covers a wide range of violence types and can affect anyone, though women and LGBTQ+ individuals are disproportionately affected."},
+  {topic:"GBV & Consent",q:"Why is 'survivor' preferred over 'victim' in GBV discourse?",opts:["It is legally required by Philippine law","It removes legal liability from perpetrators","It only applies when the person has fully healed","It emphasizes agency, strength, and recovery"],ans:3,exp:"'Survivor' centers the person's resilience and empowerment rather than passive suffering — central to a rights-based approach."},
+  {topic:"GBV & Consent",q:"Which of the following is NOT an example of gender-based violence?",opts:["A husband controlling his wife's access to money","Catcalling a woman on the street","A supervisor demanding sexual favors for a promotion","Two friends having a consensual disagreement"],ans:3,exp:"Consensual disagreements without coercion do not constitute GBV. Financial control, street harassment, and sexual coercion are all recognized forms."},
+  {topic:"GBV & Consent",q:"What role does 'power' play in GBV?",opts:["Power is irrelevant; GBV is purely about physical strength","Power only matters in workplace harassment cases","GBV only occurs with an obvious physical power difference","Abusers use authority, fear, money, or social status to control others"],ans:3,exp:"GBV is fundamentally rooted in unequal power relations. Abusers exploit economic, social, and emotional power to dominate and control."},
+  {topic:"GBV & Consent",q:"Which scenario illustrates 'coercion' as a form of force in GBV?",opts:["A person physically striking their partner","A person cheating on their partner","A person filing a restraining order against an abuser","A person threatening to harm a partner's family unless they comply"],ans:3,exp:"Coercion uses threats, manipulation, or intimidation — not necessarily physical violence — to force someone into an action against their will."},
+  {topic:"GBV & Consent",q:"Human trafficking is classified as GBV primarily because:",opts:["It only involves crossing international borders","It is committed exclusively by strangers","It is only a crime when physical violence is used","It exploits power imbalances and uses force, fraud, or coercion to control victims"],ans:3,exp:"Trafficking fits GBV because it involves systematic control, exploitation, and often targets women and children due to gender-based vulnerabilities."},
+  {topic:"GBV & Consent",q:"Online abuse qualifies as GBV when it:",opts:["Only involves direct threats sent via email","Is committed by an anonymous user only","Only occurs on social media platforms","Includes unwanted sexual behavior, harassment, or intimidation targeting someone due to their gender"],ans:3,exp:"Online GBV includes sexual harassment, non-consensual sharing of intimate images, cyberstalking, and threats — not limited to a specific platform."},
+  {topic:"GBV & Consent",q:"A person freezes in fear during a sexual assault. The attacker claims consent because the person 'didn't say no.' This claim is:",opts:["Legally valid in the Philippines","Valid only if the couple had a prior relationship","Debatable depending on the court","Invalid — fear and freezing are not consent"],ans:3,exp:"Fear responses (freezing, dissociation) are documented trauma reactions. They do not constitute consent. Philippine law requires affirmative, voluntary agreement."},
+  {topic:"GBV & Consent",q:"Economic abuse as a form of GBV includes:",opts:["Spending money on personal hobbies","Disagreements about budgeting","Asking a partner to contribute to expenses","Controlling a partner's access to finances or employment as a means of domination"],ans:3,exp:"Economic abuse involves controlling or sabotaging financial autonomy — preventing someone from working, taking their money, or making them financially dependent."},
+  {topic:"GBV & Consent",q:"Which law specifically includes economic abuse as a punishable form of violence?",opts:["RA 7877","RA 11313","RA 10354","RA 9262"],ans:3,exp:"RA 9262 (VAWC Act) explicitly includes economic abuse alongside physical, sexual, and psychological violence."},
+
+  {topic:"Women & the Law",q:"Which Philippine law is known as the 'Magna Carta of Women'?",opts:["RA 7877","RA 9262","RA 11313","RA 9710"],ans:3,exp:"RA 9710, the Magna Carta of Women, is a comprehensive law promoting women's rights to equality and non-discrimination in all spheres of life."},
+  {topic:"Women & the Law",q:"The Safe Spaces Act (RA 11313) expanded protection against sexual harassment by:",opts:["Limiting it to the workplace only","Repealing RA 7877 entirely","Only protecting women under 18","Extending coverage to public spaces, online platforms, and educational institutions"],ans:3,exp:"RA 11313 broadened the anti-harassment framework beyond the workplace to cover streets, public spaces, schools, and online environments."},
+  {topic:"Women & the Law",q:"What is a major challenge women face despite protective laws in the Philippines?",opts:["There are too many laws protecting women","Women are overrepresented in leadership positions","The laws only apply to married women","Enforcement is weak and gender stereotypes persist in legal institutions"],ans:3,exp:"The gap between legislation and implementation is critical. Patriarchal attitudes and victim-blaming culture undermine legal protections."},
+  {topic:"Women & the Law",q:"Under RA 7877, harassment requires a power relationship. This means:",opts:["Only employers can be harassers","Only co-workers of the same rank can harass each other","The victim must prove physical contact occurred","The harasser must have authority, influence, or moral ascendancy over the victim"],ans:3,exp:"RA 7877 covers supervisors over employees, teachers over students, etc. RA 11313 later extended coverage beyond this requirement."},
+  {topic:"Women & the Law",q:"Which right is protected under both RA 9710 and international human rights frameworks?",opts:["Right to bear arms","Right to unlimited maternity leave","Right to free housing","Right to reproductive health and family planning"],ans:3,exp:"Reproductive health rights are recognized in RA 9710 and in CEDAW, which the Philippines has ratified."},
+  {topic:"Women & the Law",q:"Gender discrimination in employment refers to:",opts:["Hiring based on qualifications only","Offering maternity benefits to female employees","Providing equal training to all staff","Treating employees differently based on gender, resulting in unequal pay or fewer promotions"],ans:3,exp:"Employment discrimination includes wage gaps, glass ceilings, and bias in hiring/firing — all rooted in unequal gender treatment."},
+  {topic:"Women & the Law",q:"'Equal pay for equal work' is most directly related to:",opts:["Occupational segregation","Unpaid domestic labor","Maternity leave entitlement","The gender wage gap"],ans:3,exp:"The gender wage gap — women earning less than men for the same work — is the direct target of 'equal pay for equal work' principles."},
+  {topic:"Women & the Law",q:"A woman is denied a promotion because she recently gave birth. This is:",opts:["A legitimate business decision","Workplace restructuring","Occupational segregation","Pregnancy discrimination, a form of gender-based discrimination"],ans:3,exp:"Denying opportunities based on pregnancy is gender-based discrimination, prohibited under RA 9710 and labor laws."},
+  {topic:"Women & the Law",q:"'Limited representation in leadership' refers to:",opts:["Women choosing not to pursue leadership roles","A natural outcome of different competencies","A temporary issue that resolves itself","Structural and cultural barriers preventing women from reaching executive or political positions"],ans:3,exp:"Underrepresentation in leadership results from systemic barriers — gender bias, lack of mentorship, and patriarchal norms — not individual choice."},
+  {topic:"Women & the Law",q:"The principle 'no person shall be discriminated against on account of gender' appears in which foundational document?",opts:["The Family Code","The Labor Code","RA 9262","The 1987 Philippine Constitution"],ans:3,exp:"The Philippine Constitution guarantees equal protection and prohibits gender discrimination — all gender-related laws derive their constitutional basis from it."},
+
+  {topic:"RA 9262 (VAWC)",q:"Under RA 9262, who is considered a covered offender?",opts:["Only legally married husbands","Only live-in partners","Any male person regardless of relationship","Any person the woman has a sexual or dating relationship with, or with whom she has a common child"],ans:3,exp:"RA 9262 covers husbands, former partners, boyfriends, live-in partners, and anyone with whom the woman has a child — abuse can happen outside formal marriage."},
+  {topic:"RA 9262 (VAWC)",q:"Which protection order under RA 9262 is issued by a barangay official and immediately effective?",opts:["Temporary Protection Order (TPO)","Permanent Protection Order (PPO)","Emergency Restraining Order (ERO)","Barangay Protection Order (BPO)"],ans:3,exp:"The BPO is issued by the Punong Barangay and is effective for 15 days, providing immediate protection while the survivor seeks further legal remedies."},
+  {topic:"RA 9262 (VAWC)",q:"Psychological violence under RA 9262 includes:",opts:["Physical beating only","Financial fraud","Breaking household property without threatening the woman","Threats, intimidation, verbal abuse, and acts causing mental or emotional suffering"],ans:3,exp:"Psychological violence includes acts causing emotional or mental suffering — threats, intimidation, harassment, public humiliation, and controlling behavior."},
+  {topic:"RA 9262 (VAWC)",q:"Why was RA 9262 a landmark law in Philippine history?",opts:["It was the first law to punish any form of crime","It abolished the family court system","It made divorce legal in the Philippines","It recognized domestic violence as a public issue, not merely a private family matter"],ans:3,exp:"Before RA 9262, domestic violence was often dismissed as private. The law redefined it as a criminal offense and a public health issue."},
+  {topic:"RA 9262 (VAWC)",q:"A husband prevents his wife from getting a job and controls all finances. Under RA 9262, this is:",opts:["Acceptable household management","Only punishable if physical violence also occurs","Not covered by RA 9262","Economic abuse punishable under the law"],ans:3,exp:"RA 9262 explicitly includes economic abuse — controlling money, preventing employment, creating financial dependence — as a punishable act."},
+  {topic:"RA 9262 (VAWC)",q:"A Permanent Protection Order (PPO) under RA 9262 is issued by:",opts:["The Punong Barangay","The Office of the Solicitor General","The National Bureau of Investigation","A regional trial court after due notice and hearing"],ans:3,exp:"The PPO is issued by the Regional Trial Court or Family Court after a formal hearing, providing long-term legal protection."},
+  {topic:"RA 9262 (VAWC)",q:"RA 9262's coverage of violence 'in the family or household setting' means:",opts:["Violence can only be prosecuted if it occurs inside the home","Only violence witnessed by children is covered","Only violence with physical injuries is covered","Violence can be prosecuted regardless of location if the relationship qualifies"],ans:3,exp:"It is the relationship, not the location, that determines coverage under RA 9262."},
+  {topic:"RA 9262 (VAWC)",q:"RA 9262 does NOT require the woman to be married to file a case. This was included to:",opts:["Encourage cohabitation over marriage","Allow any woman to file against any man","Limit cases to those with children","Recognize that abuse occurs in all types of intimate relationships"],ans:3,exp:"The law intentionally covered non-marital relationships because abuse frequently occurs between dating partners, live-in partners, and co-parents."},
+  {topic:"RA 9262 (VAWC)",q:"Which act would NOT be covered by RA 9262?",opts:["A former boyfriend harassing his ex online","A husband physically injuring his wife","A live-in partner threatening to take their child away","A stranger assaulting a woman on the street"],ans:3,exp:"RA 9262 covers violence by intimate/former intimate partners. A stranger's assault is covered under the Revised Penal Code, not RA 9262."},
+  {topic:"RA 9262 (VAWC)",q:"The Temporary Protection Order (TPO) under RA 9262 is issued by:",opts:["The Punong Barangay within 24 hours","The PNP Women and Children Protection Center","The City Mayor's office","The court within 24 hours of application, without notifying the offender"],ans:3,exp:"The TPO is issued ex parte (without hearing the other side) within 24 hours of filing, providing immediate legal protection."},
+  {topic:"RA 9262 (VAWC)",q:"A male victim of violence by a female partner files a case under RA 9262. What will happen?",opts:["The case will be accepted; RA 9262 covers all genders","He must file under a different law but with the same penalties","He can file only if they have children","The case will be dismissed; RA 9262 specifically protects women and their children"],ans:3,exp:"RA 9262 was designed to protect women and children. Male victims can seek remedy under other laws (e.g., Revised Penal Code)."},
+
+  {topic:"LGBTQ+ Rights",q:"The SOGIE Equality Bill aims to:",opts:["Legalize same-sex marriage","Criminalize homosexuality","Provide special privileges exclusively to LGBTQ+ persons","Prohibit discrimination based on sexual orientation, gender identity, and expression"],ans:3,exp:"The bill seeks to prevent discrimination in employment, education, housing, and services — it ensures equal treatment, not special privileges."},
+  {topic:"LGBTQ+ Rights",q:"Which existing Philippine law provides SOME protection to LGBTQ+ individuals against bullying?",opts:["RA 9262","RA 10354","Civil Code of the Philippines","Anti-Bullying Act (RA 10627)"],ans:3,exp:"RA 10627 requires schools to adopt anti-bullying policies covering LGBTQ+ students. A comprehensive national anti-discrimination law remains absent."},
+  {topic:"LGBTQ+ Rights",q:"Why is the absence of a national SOGIE anti-discrimination law significant?",opts:["It means no discrimination against LGBTQ+ exists","Local ordinances are fully sufficient","LGBTQ+ people are protected by the family code","LGBTQ+ individuals lack consistent legal protection across all areas of life"],ans:3,exp:"Without a national law, protections are patchy and depend on local ordinances, leaving LGBTQ+ individuals with limited recourse."},
+  {topic:"LGBTQ+ Rights",q:"Hate speech directed at LGBTQ+ persons causes:",opts:["Only physical harm","Economic harm only","No legally recognized harm","Psychological harm, social exclusion, and may incite violence"],ans:3,exp:"Hate speech creates an environment of fear, contributes to mental health issues, social exclusion, and can escalate to physical violence."},
+  {topic:"LGBTQ+ Rights",q:"The Safe Spaces Act (RA 11313) protects LGBTQ+ individuals from:",opts:["Only online harassment","Physical violence only","Discrimination in private property only","Sexual harassment and gender-based discrimination in public spaces, workplaces, and schools"],ans:3,exp:"RA 11313 covers LGBTQ+ individuals in public spaces, online platforms, and educational/work environments."},
+  {topic:"LGBTQ+ Rights",q:"Denial of healthcare services to a transgender person is an example of:",opts:["Legitimate medical triage","A personal choice by healthcare providers","Legal policy in the Philippines","SOGIE-based discrimination"],ans:3,exp:"Denying services based on gender identity violates human dignity and constitutes SOGIE discrimination, addressed by local anti-discrimination ordinances."},
+  {topic:"LGBTQ+ Rights",q:"LGBTQ+ rights advocates argue their rights are 'human rights' because:",opts:["LGBTQ+ persons are a separate legal category","It gives LGBTQ+ persons more rights than others","Only international courts can grant these rights","Human rights are universal and apply regardless of SOGIE"],ans:3,exp:"Human rights frameworks establish that rights are inherent to all persons by virtue of humanity — SOGIE does not disqualify anyone."},
+  {topic:"LGBTQ+ Rights",q:"A company refuses to hire a qualified applicant after learning they are gay. This is:",opts:["Reasonable business judgment","Occupational segregation","Legal hiring practice under Philippine national law","SOGIE-based employment discrimination"],ans:3,exp:"Refusing employment based on sexual orientation is discrimination. Some local ordinances and the Magna Carta of Women provide related protections."},
+  {topic:"LGBTQ+ Rights",q:"Local Anti-Discrimination Ordinances (LADOs) are significant because:",opts:["They replace the need for national legislation","They are legally superior to national laws","They only apply to government employees","They provide LGBTQ+ protections within specific cities in the absence of national law"],ans:3,exp:"LADOs fill the gap left by the absence of a national SOGIE Equality Bill. Cities like Quezon City and Cebu have enacted these protections."},
+  {topic:"LGBTQ+ Rights",q:"The main reason the SOGIE Equality Bill has not been passed is:",opts:["Lack of public support","Insufficient evidence of discrimination","Opposition from the LGBTQ+ community itself","Strong opposition from religious groups who argue it conflicts with moral and religious values"],ans:3,exp:"The bill faces sustained opposition primarily from Catholic Church-aligned groups and conservative legislators framing it as conflicting with religious doctrine."},
+  {topic:"LGBTQ+ Rights",q:"SOGIE stands for:",opts:["Sexuality, Orientation, Gender, Inclusion, Equality","Social, Organizational, Gender, Institutional, Expression","Sexual Order, Gender Index, Equity","Sexual Orientation, Gender Identity, and Gender Expression"],ans:3,exp:"SOGIE = Sexual Orientation (who you're attracted to), Gender Identity (how you identify), and Gender Expression (how you express your gender). These are distinct dimensions."},
+
+  {topic:"Sexual Harassment",q:"RA 7877 requires a power dynamic while RA 11313 does NOT. This difference means:",opts:["RA 11313 is a weaker law","RA 7877 was repealed by RA 11313","RA 11313 only applies online","RA 11313 covers peer and stranger harassment that RA 7877 missed"],ans:3,exp:"RA 7877 only covered supervisors/teachers harassing subordinates. RA 11313 filled the gap by covering catcalling, peer harassment, and online harassment."},
+  {topic:"Sexual Harassment",q:"Catcalling is explicitly prohibited under which Philippine law?",opts:["RA 9262","RA 7877","RA 9710","RA 11313 (Safe Spaces Act)"],ans:3,exp:"RA 11313 specifically criminalizes catcalling, wolf-whistling, and unwanted sexual comments in public, recognizing street harassment as a form of GBV."},
+  {topic:"Sexual Harassment",q:"Which of the following is a NON-VERBAL form of sexual harassment?",opts:["Making sexual jokes","Sending explicit messages","Touching someone without consent","Staring at someone's body sexually or making obscene gestures"],ans:3,exp:"Non-verbal harassment includes leering and obscene gestures. It is still harassment even without words or physical contact."},
+  {topic:"Sexual Harassment",q:"A professor tells a student their grade depends on going on a date. This is:",opts:["Flirting, not harassment","Not covered by any Philippine law","Only harassment if the student agrees and then changes their mind","Sexual harassment under RA 7877 because of the power relationship"],ans:3,exp:"This is quid pro quo sexual harassment — using academic power to coerce sexual favors. RA 7877 directly covers education settings."},
+  {topic:"Sexual Harassment",q:"The psychological impact of sexual harassment on survivors typically includes:",opts:["Increased workplace productivity","Motivation to report all incidents immediately","No long-term effects if the harassment was verbal only","Trauma, anxiety, depression, and reduced confidence"],ans:3,exp:"Sexual harassment causes significant psychological harm regardless of form. Survivors often experience PTSD-like symptoms and difficulty in professional and social settings."},
+  {topic:"Sexual Harassment",q:"Online sexual harassment under RA 11313 includes:",opts:["Only direct messages sent to a person","Only harassment on social media platforms","Only harassment resulting in physical harm","Sending unsolicited sexual content, non-consensual sharing of intimate images, and cyberstalking"],ans:3,exp:"RA 11313 covers a wide range of online gender-based harassment, recognizing digital spaces as extensions of public life."},
+  {topic:"Sexual Harassment",q:"Which prevention strategy is most systemic in addressing sexual harassment?",opts:["Advising women to dress conservatively","Telling individuals to avoid harassers","Blaming victims for putting themselves in risky situations","Creating institutional policies, safe reporting mechanisms, and awareness programs"],ans:3,exp:"Systemic prevention requires institutional responses — policies, training, safe reporting channels — rather than placing the burden on potential victims."},
+  {topic:"Sexual Harassment",q:"A male employee is sexually harassed by a female supervisor. Under RA 7877:",opts:["The case cannot be filed because only women can be harassed","The case can only be filed if physical contact occurred","The case must be filed under RA 11313 instead","The case can be filed because RA 7877 protects all genders in power-based harassment situations"],ans:3,exp:"RA 7877 protects all individuals. The key element is the power relationship, not the gender of either party."},
+  {topic:"Sexual Harassment",q:"'Hostile work environment' harassment differs from quid pro quo harassment in that:",opts:["It requires a physical element","It only occurs between co-workers of equal rank","It is not covered by Philippine law","It involves pervasive sexual conduct that creates an intimidating environment, without explicit demands"],ans:3,exp:"Hostile work environment harassment involves patterns of sexual conduct making the workplace offensive — no explicit exchange is required. Both types are recognized in Philippine law."},
+  {topic:"Sexual Harassment",q:"Why is victim-blaming harmful in cases of sexual harassment?",opts:["It helps identify the real cause of harassment","It ensures only genuine cases are reported","It is a neutral analytical tool","It discourages reporting, reinforces impunity, and shifts responsibility away from perpetrators"],ans:3,exp:"Victim-blaming deters reporting, retraumatizes survivors, and protects perpetrators. It reflects patriarchal attitudes that treat harassment as a response to victim behavior."},
+  {topic:"Sexual Harassment",q:"Schools are required to address sexual harassment under:",opts:["RA 9262 only","Only RA 10354","Only the Anti-Bullying Act","Both RA 7877 and RA 11313"],ans:3,exp:"RA 7877 covers teachers and school authorities in power relationships, while RA 11313 extends to all school environments including peer harassment."},
+
+  {topic:"Women in Development",q:"GAD differs from WID primarily because:",opts:["GAD focuses only on increasing women's economic output","WID is more progressive than GAD","GAD excludes men from development programs","GAD addresses power relations and structural inequality, not just women's participation"],ans:3,exp:"WID simply added women to existing frameworks. GAD recognizes that gender relations and power structures must be transformed for genuine equality."},
+  {topic:"Women in Development",q:"Which best illustrates 'women's empowerment' in a development context?",opts:["A government provides women with food aid","A male leader advocates for women's rights","Women are assigned specific domestic roles in development programs","Women gain control over resources, participate in decision-making, and can exercise their rights"],ans:3,exp:"Empowerment involves agency, capability, and control — not just receiving benefits. Women must be able to make meaningful decisions about their lives."},
+  {topic:"Women in Development",q:"The intersection of poverty and gender means that:",opts:["Poverty affects all genders equally","Men are more affected by poverty because they are breadwinners","Poverty only affects women in rural areas","Women experience poverty differently and more severely due to gender-based discrimination and limited access to resources"],ans:3,exp:"Discrimination limits women's access to education, healthcare, and employment, making them disproportionately vulnerable to poverty."},
+  {topic:"Women in Development",q:"'Unpaid care work' refers to:",opts:["Volunteer work for NGOs","Part-time jobs","Jobs in the informal sector","Domestic and caregiving labor predominantly done by women without financial compensation"],ans:3,exp:"Unpaid care work is economically productive but unrecognized. It disproportionately burdens women and limits their participation in paid employment."},
+  {topic:"Women in Development",q:"Why is women's political participation important for development?",opts:["Because women make better politicians than men","Because it meets international quotas","Because it replaces the need for gender-specific laws","Because equal representation ensures policies reflect diverse needs, including gender-specific ones"],ans:3,exp:"Women's political participation ensures laws and budgets address women's needs. Greater representation correlates with stronger social policies."},
+  {topic:"Women in Development",q:"Limited access to education for women is a development issue because:",opts:["Education is not important for economic growth","Women prefer vocational training over academic education","Literacy rates have no effect on development outcomes","Education is the primary driver of women's empowerment, health, and economic independence"],ans:3,exp:"Educated women have better health outcomes, higher earnings, and greater political participation — all driving development."},
+  {topic:"Women in Development",q:"The GAD framework requires government agencies in the Philippines to:",opts:["Allocate 1% of their budget to women's health","Create separate departments for women only","Hire only female staff in social services","Mainstream gender perspectives in all programs and allocate at least 5% of their budget to GAD initiatives"],ans:3,exp:"Philippine law requires all government agencies to mainstream gender in their work and dedicate at least 5% of annual appropriations to GAD programs."},
+  {topic:"Women in Development",q:"Maternal mortality is a development issue primarily because:",opts:["It only affects women in conflict zones","It is caused solely by individual health choices","It is irrelevant to economic development","It reflects failures in healthcare access and gender equity — preventable deaths that indicate systemic inequality"],ans:3,exp:"Maternal mortality is a key development indicator. Most maternal deaths are preventable — high rates reflect systemic failures and inequality."},
+  {topic:"Women in Development",q:"Why is development 'more effective when women are included equally'?",opts:["Women are better workers than men","It is a political requirement only","It reduces male unemployment","Evidence shows gender equality improves economic growth, health outcomes, and social stability"],ans:3,exp:"Research consistently shows gender equality drives economic growth, reduces poverty, and improves resilience — making it a development imperative."},
+  {topic:"Women in Development",q:"'Occupational segregation' refers to:",opts:["Separating workers by age","Discrimination against older workers","Mandatory rotation between departments","The concentration of women in lower-paying 'feminine' sectors and men in higher-paying 'masculine' sectors"],ans:3,exp:"Occupational segregation is both horizontal (women in different sectors) and vertical (women in lower positions). It drives the gender wage gap and reflects gender stereotypes."},
+  {topic:"Women in Development",q:"Access to reproductive healthcare is a development issue because:",opts:["It is only a medical concern","It only benefits wealthy women","It is only relevant in urban areas","It directly affects women's ability to control their lives, participate in the economy, and access education"],ans:3,exp:"Reproductive health access allows women to make informed choices about their bodies, directly impacting education, workforce participation, and economic independence."},
+
+  {topic:"Gender Inequality in Law",q:"'Victim-blaming' in sexual violence cases within criminal justice reflects:",opts:["Objective legal analysis","A legally required standard of evidence","An impartial evaluation of testimony","Gender stereotypes that question survivor credibility based on behavior, dress, or relationship to perpetrator"],ans:3,exp:"Victim-blaming is a manifestation of patriarchal stereotypes in legal settings. It retraumatizes survivors and leads to unjust outcomes."},
+  {topic:"Gender Inequality in Law",q:"Gender inequality in marriage laws historically manifested as:",opts:["Equal property rights for spouses","Mandatory prenuptial agreements","Equal grounds for annulment for both spouses","Women requiring a husband's consent for legal and financial transactions"],ans:3,exp:"Historically, and under parts of the Family Code, women's legal capacity was restricted — needing consent for transactions and following the husband's chosen domicile."},
+  {topic:"Gender Inequality in Law",q:"How do gender stereotypes affect court decisions in criminal cases?",opts:["They ensure fair treatment by using social context","They are never present in Philippine courts","They only affect civil cases","Judges may unconsciously apply stereotypes about how 'real victims' behave, disadvantaging non-conforming survivors"],ans:3,exp:"Stereotype-based judgments (e.g., 'a real victim would have fought back') create unequal treatment, leading to wrongful acquittals and double victimization."},
+  {topic:"Gender Inequality in Law",q:"'Patriarchy' in legal systems means:",opts:["A legal system designed to protect fathers","Equality under the law for all genders","A temporary phase in legal development","A system where male dominance is embedded in law, norms, and institutions, disadvantaging women and LGBTQ+ persons"],ans:3,exp:"Patriarchy refers to social and legal systems structured around male authority and dominance. Gender inequality in law is a product of patriarchal norms."},
+  {topic:"Gender Inequality in Law",q:"Under the Philippine Family Code, the default family domicile is:",opts:["Decided equally by both spouses","Decided by the wife","Determined by the court","Fixed to the husband's chosen domicile"],ans:3,exp:"Traditionally under the Family Code, the husband's choice of domicile prevailed — a provision critics identify as reflecting gender inequality."},
+  {topic:"Gender Inequality in Law",q:"Why does gender inequality in criminal law disproportionately affect LGBTQ+ persons?",opts:["Criminal law explicitly protects LGBTQ+ persons in all cases","LGBTQ+ persons are more likely to commit crimes","Criminal courts are gender-neutral environments","LGBTQ+ persons face bias in law enforcement and adjudication due to stereotypes and lack of specific legal protections"],ans:3,exp:"Without specific protections, LGBTQ+ persons face unequal access to justice — hate crimes may be minimized and their testimony treated with skepticism."},
+  {topic:"Gender Inequality in Law",q:"The concept of 'double standard' in gender and criminal law refers to:",opts:["Having two sets of legal codes","Charging a person twice for the same crime","Having separate courts for women","Applying different moral and legal standards to the same behavior depending on the gender of the person involved"],ans:3,exp:"Double standards mean a woman's sexual history is used to discredit her in assault cases, while a man's would not be — identical conduct judged differently by gender."},
+  {topic:"Gender Inequality in Law",q:"Legal reforms addressing gender inequality in marriage law aim to:",opts:["Eliminate marriage as an institution","Give women more rights than men to correct historical imbalance","Remove government involvement in marriage","Ensure equal rights, responsibilities, and legal standing for both spouses"],ans:3,exp:"Gender-equal marriage law reform seeks substantive equality — equal property rights, equal grounds for legal action, equal decision-making authority."},
+  {topic:"Gender Inequality in Law",q:"Which best demonstrates how 'patriarchy reinforces gender inequality in law'?",opts:["Laws that protect women from violence","Gender-neutral language in legislation","Equal suffrage rights","Laws or interpretations that assume men are the primary decision-makers and minimize women's autonomy"],ans:3,exp:"Patriarchal legal structures embed assumptions about gender roles — presuming male financial authority or requiring women to prove 'chaste reputation' in assault cases."},
+  {topic:"Gender Inequality in Law",q:"Financial dependence as a result of marriage law inequalities leads to:",opts:["Stronger family units","Equal household decision-making","Men bearing unfair financial burdens","Women's reduced ability to leave abusive relationships and exercise economic autonomy"],ans:3,exp:"When women lack independent financial and legal standing, they become unable to access credit, own property, or leave abusive situations without losing everything."},
+  {topic:"Gender Inequality in Law",q:"'Equal protection under the law' as a constitutional principle means:",opts:["All people receive exactly the same treatment in all circumstances","Women receive additional protections in all cases","Only citizens are protected","No person shall be denied legal protection, and laws must not arbitrarily discriminate based on gender or identity"],ans:3,exp:"Equal protection prohibits arbitrary discrimination. Gender inequality in legal systems violates this principle when laws treat people differently based on gender."},
+
+  {topic:"RH Law (RA 10354)",q:"Republic Act 10354 was primarily intended to:",opts:["Legalize abortion in the Philippines","Mandate population reduction","Prohibit artificial contraceptives","Ensure universal access to reproductive health services, family planning, and maternal care"],ans:3,exp:"The RH Law guarantees access to reproductive healthcare, family planning, maternal care, and sex education — it is about health access, not abortion."},
+  {topic:"RH Law (RA 10354)",q:"The Catholic Church's main objection to the RH Law is:",opts:["It promotes abortion","It is too expensive to implement","It removes parental rights over sex education","It violates religious beliefs about artificial contraception and sexuality"],ans:3,exp:"The Church opposes artificial contraception on doctrinal grounds and argues the law violates religious freedom by requiring institutions to provide services they morally oppose."},
+  {topic:"RH Law (RA 10354)",q:"Supporters of the RH Law argue it reduces:",opts:["Church attendance","Population growth below replacement level","Men's reproductive health rights","Maternal mortality by improving access to skilled birth attendants and maternal healthcare"],ans:3,exp:"Proponents cite evidence that access to maternal healthcare and family planning significantly reduces preventable maternal deaths."},
+  {topic:"RH Law (RA 10354)",q:"Sex education under RA 10354 is intended to be:",opts:["Mandatory starting at age 5","Optional for students with religious exemptions","Controlled entirely by religious institutions","Age-appropriate, values-based, and scientifically accurate"],ans:3,exp:"The RH Law mandates age-appropriate sex education covering reproductive health, values, and healthy relationships — scientifically grounded and respectful of values."},
+  {topic:"RH Law (RA 10354)",q:"Critics who argue the RH Law 'encourages premarital sex' rely on:",opts:["Evidence that sex education increases sexual activity","Scientific consensus","Statistical evidence from Philippine schools","The unproven assumption that information about sex leads to more sex rather than informed decision-making"],ans:3,exp:"Research does not support the claim that comprehensive sex education increases sexual activity. Critics rely on an ideological assumption rather than empirical evidence."},
+  {topic:"RH Law (RA 10354)",q:"The RH Law addresses 'informed choice' in family planning by:",opts:["Mandating specific family planning methods for all couples","Restricting choices to natural family planning only","Leaving all decisions to healthcare providers","Ensuring individuals receive complete, accurate information about all methods to make autonomous decisions"],ans:3,exp:"Informed choice is central to the RH Law — it guarantees access to information about ALL legal methods without coercion from the state, church, or healthcare provider."},
+  {topic:"RH Law (RA 10354)",q:"The RH Law was signed into law in:",opts:["2008","2010","2015","2012"],ans:3,exp:"RA 10354 was signed by President Benigno Aquino III on December 21, 2012, after years of legislative battles."},
+  {topic:"RH Law (RA 10354)",q:"The tension between the RH Law and religious freedom was adjudicated by:",opts:["The Senate","The Catholic Bishops Conference of the Philippines","The Commission on Human Rights","The Supreme Court, which upheld most provisions but struck down some"],ans:3,exp:"The Supreme Court ruled in Imbong v. Ochoa (2014), upholding the law's constitutionality but striking down provisions compelling religiously-objecting private institutions to provide services."},
+  {topic:"RH Law (RA 10354)",q:"Which group benefits MOST directly from the maternal healthcare provisions of the RH Law?",opts:["Urban professional women","Women who prefer traditional medicine","Women in private healthcare settings","Poor and marginalized women with limited access to prenatal and obstetric care"],ans:3,exp:"The law was designed to address equity gaps — poor women in remote areas had the highest maternal mortality rates due to lack of access to skilled birth attendants."},
+  {topic:"RH Law (RA 10354)",q:"From a feminist perspective, the RH Law is important because it:",opts:["Promotes population control as a development strategy","Gives the government control over reproduction","Aligns with Church teaching on family planning","Recognizes reproductive health as a right and affirms women's bodily autonomy"],ans:3,exp:"Feminists support the RH Law as an affirmation that women have the right to make decisions about their bodies, access healthcare, and control their reproductive lives."},
+  {topic:"RH Law (RA 10354)",q:"The 'responsible parenthood' component of the RH Law refers to:",opts:["Mandating a specific number of children","Compulsory parenting classes","Government supervision of family planning decisions","The right and responsibility of couples to decide freely the number, spacing, and timing of children with access to information and means"],ans:3,exp:"Responsible parenthood recognizes that individuals and couples have the right to determine their family size freely and responsibly, without state or religious coercion."},
+
+  {topic:"Labor / Media / Activism",q:"The gender wage gap persists despite equal pay laws primarily because of:",opts:["Women choosing lower-paying jobs freely","Men being more productive on average","Women working fewer hours","Occupational segregation, discrimination in promotion, undervaluation of feminized work, and unequal care burdens"],ans:3,exp:"The wage gap is structural — it results from the devaluation of female-dominated sectors, glass ceilings, discrimination, and unpaid care work limiting career advancement."},
+  {topic:"Labor / Media / Activism",q:"Media representation affects gender equality by:",opts:["Having no real-world impact on attitudes","Only affecting children's development","Primarily impacting men's behavior","Shaping social norms, reinforcing or challenging gender stereotypes, and influencing perceptions of gender roles"],ans:3,exp:"Media is a powerful norm-setter. Stereotyped portrayals normalize gender inequality, while diverse representation can challenge harmful norms."},
+  {topic:"Labor / Media / Activism",q:"'The male gaze' in media studies refers to:",opts:["Men watching more TV than women","Men's superior visual processing","A camera technique used in action films","The tendency to present women as objects for male pleasure rather than as full subjects with agency"],ans:3,exp:"Coined by Laura Mulvey, 'the male gaze' describes how film and media are often structured from a male perspective, objectifying women and positioning male audiences as default viewers."},
+  {topic:"Labor / Media / Activism",q:"Gender activism differs from charity work primarily because:",opts:["Activism involves only protests","Charity is more effective","Activism is illegal in the Philippines","Activism seeks to address root causes and change systems and power structures, not just provide immediate relief"],ans:3,exp:"Activism addresses structural and systemic inequality — it aims to change laws, norms, and power relations. Charity addresses symptoms without challenging causes."},
+  {topic:"Labor / Media / Activism",q:"The #MeToo movement is an example of gender activism that used:",opts:["Traditional protest marches exclusively","Violence to achieve change","Lobbying of the United Nations only","Social media to amplify survivors' voices and demand accountability from powerful perpetrators"],ans:3,exp:"#MeToo demonstrated how digital activism can create rapid, mass-scale social change — breaking silence around sexual harassment and leading to significant institutional responses globally."},
+  {topic:"Labor / Media / Activism",q:"Maternity leave as a labor right is significant because:",opts:["It is a special privilege for women","It has no effect on workplace gender equality","It only matters in developing countries","It supports women's health, infant wellbeing, and economic security — its absence forces women to choose between career and family"],ans:3,exp:"Adequate maternity leave is essential for health and equality. Without it, women face economic penalties for childbearing, reinforcing workplace gender inequality."},
+  {topic:"Labor / Media / Activism",q:"Gender stereotypes in education affect development by:",opts:["Having no measurable impact","Improving academic performance through role clarity","Reflecting natural ability differences","Directing girls away from STEM and leadership and boys away from caregiving, limiting individual potential and economic outcomes"],ans:3,exp:"Stereotypes in education restrict career choices — girls pushed away from math/science, boys from arts/care fields — wasting human potential and perpetuating gendered labor markets."},
+  {topic:"Labor / Media / Activism",q:"Why is mental health disproportionately affected by gender inequality?",opts:["Women are biologically more prone to mental illness","Mental health is unrelated to social conditions","Men are more affected by gender inequality","Discrimination, violence, social pressure, and limited autonomy create chronic stress contributing to anxiety, depression, and trauma in marginalized genders"],ans:3,exp:"Social determinants of mental health include safety, autonomy, and dignity — all undermined by gender discrimination and violence, creating disproportionate mental health burdens."},
+  {topic:"Labor / Media / Activism",q:"'Intersectionality' in gender studies means:",opts:["The overlap of gender and physical location","The intersection of traffic and public spaces","A legal concept from criminal law","The interconnected nature of social identities (gender, class, race, disability) creating overlapping systems of discrimination or privilege"],ans:3,exp:"Coined by Kimberlé Crenshaw, intersectionality recognizes that a poor, disabled, indigenous woman faces multiple compounding forms of discrimination that cannot be understood by examining any single identity alone."},
+  {topic:"Labor / Media / Activism",q:"The underrepresentation of women in media leadership results in:",opts:["Better content quality","More diverse storylines","No effect on media content","Fewer stories centered on women's experiences and more perpetuation of male-dominated narratives"],ans:3,exp:"Who tells stories matters. Female leadership in media organizations correlates with more diverse and accurate portrayals of women and LGBTQ+ individuals."},
+  {topic:"Labor / Media / Activism",q:"Gender-based health disparities in the Philippines include:",opts:["Men having better access to reproductive healthcare","Equal healthcare access for all genders","LGBTQ+ persons having full healthcare coverage under national law","Women facing barriers to maternal care and reproductive health services, often carrying the burden of family healthcare management"],ans:3,exp:"Women bear disproportionate reproductive health burdens while facing access barriers. LGBTQ+ persons face discrimination in healthcare settings. These are gendered health inequalities with real impacts."}
+];
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+const QUESTIONS = RAW.map(q => {
+  const correctText = q.opts[q.ans];
+  const shuffled = shuffle([...q.opts]);
+  return { ...q, opts: shuffled, ans: shuffled.indexOf(correctText) };
+});
+
+const TOPICS = [...new Set(QUESTIONS.map(q => q.topic))];
+let answered = {};
+let currentTopic = "All";
+
+function getQs() {
+  return currentTopic === "All" ? QUESTIONS : QUESTIONS.filter(q => q.topic === currentTopic);
+}
+
+function renderTabs() {
+  const el = document.getElementById("tabs");
+  el.innerHTML = ["All", ...TOPICS].map(t =>
+    `<button class="tab ${t === currentTopic ? 'on' : ''}" onclick="setTopic('${t.replace(/'/g,"\\'")}')">
+      ${t}${t !== "All" ? ` <span style="font-size:11px;color:var(--color-text-tertiary)">${scoreForTopic(t)}</span>` : ''}
+    </button>`
+  ).join('');
+}
+
+function scoreForTopic(t) {
+  const qs = QUESTIONS.filter(q => q.topic === t);
+  const done = qs.filter((_,i) => answered[QUESTIONS.indexOf(qs[i])] !== undefined);
+  if (!done.length) return '';
+  const correct = done.filter((_,i) => answered[QUESTIONS.indexOf(qs[i])] === qs[i].ans);
+  return `${correct.length}/${qs.length}`;
+}
+
+function setTopic(t) {
+  currentTopic = t;
+  renderTabs();
+  renderQs();
+}
+
+function renderQs() {
+  const qs = getQs();
+  let html = '';
+  let lastTopic = '';
+  qs.forEach((q, i) => {
+    const gi = QUESTIONS.indexOf(q);
+    const state = answered[gi];
+    if (currentTopic === "All" && q.topic !== lastTopic) {
+      html += `<div class="section-lbl">${q.topic}</div>`;
+      lastTopic = q.topic;
+    }
+    html += `<div class="qcard">
+      <div class="qhead">
+        <div class="qtext">${q.q}</div>
+        <div class="qnum">${i+1} / ${qs.length}</div>
+      </div>
+      <div class="opts">`;
+    const letters = ['A','B','C','D'];
+    q.opts.forEach((opt, oi) => {
+      let cls = '';
+      if (state !== undefined) {
+        if (oi === q.ans) cls = 'correct locked';
+        else if (oi === state) cls = 'wrong locked';
+        else cls = 'locked';
+      }
+      html += `<div class="opt ${cls}" onclick="doAnswer(${gi},${oi})">
+        <span class="opt-letter">${letters[oi]}.</span>
+        <span>${opt}</span>
+      </div>`;
+    });
+    html += `</div>`;
+    if (state !== undefined) {
+      html += `<div class="exp">${q.exp}</div>`;
+    }
+    html += `</div>`;
+  });
+  document.getElementById("qlist").innerHTML = html;
+  updateStats();
+}
+
+function doAnswer(gi, oi) {
+  if (answered[gi] !== undefined) return;
+  answered[gi] = oi;
+  renderTabs();
+  renderQs();
+}
+
+function updateStats() {
+  const qs = getQs();
+  const idxs = qs.map(q => QUESTIONS.indexOf(q));
+  const done = idxs.filter(i => answered[i] !== undefined);
+  const correct = done.filter(i => answered[i] === QUESTIONS[i].ans);
+  document.getElementById("sTotal").textContent = done.length;
+  document.getElementById("sCorrect").textContent = correct.length;
+  document.getElementById("sWrong").textContent = done.length - correct.length;
+  const pct = done.length > 0 ? Math.round(correct.length / done.length * 100) : null;
+  document.getElementById("sPct").textContent = pct !== null ? pct + "%" : "—";
+  const pw = document.getElementById("progWrap");
+  if (done.length > 0) {
+    pw.style.display = "block";
+    document.getElementById("progTxt").textContent = `${correct.length} of ${done.length} correct (${pct}%)`;
+    document.getElementById("progFill").style.width = pct + "%";
+  } else {
+    pw.style.display = "none";
+  }
+}
+
+function resetAll() {
+  answered = {};
+  renderTabs();
+  renderQs();
+}
+
+function revealAll() {
+  getQs().forEach(q => {
+    const i = QUESTIONS.indexOf(q);
+    if (answered[i] === undefined) answered[i] = q.ans;
+  });
+  renderTabs();
+  renderQs();
+}
+
+renderTabs();
+renderQs();
+</script>
